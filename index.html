@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDR — Prospecção Automotiva | Auto Wise Brasil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0D10;
+    --surface: #14171B;
+    --surface-2: #1B1F24;
+    --line: #2A2F36;
+    --accent: #2F6FED;
+    --accent-2: #6FD3FF;
+    --text: #F3F1EA;
+    --muted: #8B93A0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:0.02em;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 24px;}
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:''; width:22px; height:2px; background:var(--accent); display:inline-block;}
+
+  /* Road-marking divider — signature element */
+  .road-divider{
+    height:3px;
+    background-image: repeating-linear-gradient(90deg, var(--accent) 0 26px, transparent 26px 46px);
+    opacity:0.55;
+    margin: 64px 0;
+  }
+
+  header.hero{padding:88px 0 56px;}
+  .hero-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:48px; flex-wrap:wrap; gap:16px;}
+  .brand{font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--muted); letter-spacing:0.06em;}
+  .brand b{color:var(--text);}
+  h1.headline{
+    font-family:'Archivo Black', sans-serif;
+    font-size:clamp(38px, 6vw, 64px);
+    line-height:0.98;
+    text-transform:none;
+    margin:18px 0 20px;
+    max-width:11ch;
+  }
+  h1.headline .hl{color:var(--accent);}
+  .sub{font-size:18px; color:var(--muted); max-width:52ch; margin-bottom:36px;}
+
+  .hero-body{display:flex; gap:48px; align-items:center; flex-wrap:wrap;}
+  .hero-copy{flex:1 1 420px;}
+  .gauge-wrap{flex:0 0 220px; display:flex; flex-direction:column; align-items:center; gap:8px;}
+  .gauge-label{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted); text-align:center; letter-spacing:0.05em;}
+  .gauge-label b{color:var(--accent-2); font-size:22px; display:block; font-family:'Barlow Condensed'; letter-spacing:0;}
+
+  .cta-btn{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:700;
+    font-size:19px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    background:var(--accent);
+    color:#0B0D10;
+    border:none;
+    padding:16px 30px;
+    border-radius:4px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow: 0 0 0 0 rgba(47,111,237,0.4);
+  }
+  .cta-btn:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(47,111,237,0.25);}
+  .cta-btn:focus-visible{outline:3px solid var(--accent-2); outline-offset:3px;}
+  .cta-btn .arrow{transition:transform .15s ease;}
+  .cta-btn:hover .arrow{transform:translateX(4px);}
+
+  section{padding:8px 0;}
+  h2.section-title{font-size:clamp(26px,4vw,34px); margin-bottom:24px;}
+  .section-title .num{color:var(--accent); font-family:'JetBrains Mono'; font-size:15px; text-transform:none; display:block; margin-bottom:6px; letter-spacing:0.05em;}
+
+  ul.list{list-style:none;}
+  ul.list li{
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+  }
+  ul.list li:last-child{border-bottom:none;}
+  ul.list li::before{
+    content:'▸';
+    color:var(--accent);
+    font-family:'JetBrains Mono';
+    flex:0 0 auto;
+  }
+
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  @media (max-width:680px){ .grid-2{grid-template-columns:1fr;} }
+
+  .offer-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:28px;
+    margin-top:8px;
+  }
+  .offer-card ul.list li::before{content:'●'; font-size:8px; margin-top:6px;}
+
+  footer.closing{padding:64px 0 96px; text-align:center;}
+  footer.closing .sub{margin-left:auto; margin-right:auto;}
+  footer.closing p.small{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted); margin-top:28px;}
+
+  /* Modal */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(6,7,9,0.82);
+    display:none; align-items:flex-start; justify-content:center;
+    padding:40px 16px; overflow-y:auto; z-index:100;
+    backdrop-filter: blur(2px);
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    max-width:520px; width:100%;
+    padding:36px;
+    position:relative;
+    animation: modalIn .22s ease;
+  }
+  @keyframes modalIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){
+    .modal{animation:none;}
+    .cta-btn, .cta-btn .arrow{transition:none;}
+  }
+  .modal h3{font-size:26px; margin-bottom:6px;}
+  .modal .modal-sub{color:var(--muted); font-size:14px; margin-bottom:26px;}
+  .modal-close{
+    position:absolute; top:18px; right:18px;
+    background:none; border:none; color:var(--muted);
+    font-size:22px; cursor:pointer; line-height:1;
+    width:32px; height:32px; border-radius:6px;
+  }
+  .modal-close:hover{color:var(--text); background:var(--surface-2);}
+  .modal-close:focus-visible{outline:2px solid var(--accent-2);}
+
+  .field{margin-bottom:18px;}
+  .field label{
+    display:block; font-family:'JetBrains Mono', monospace;
+    font-size:12px; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--muted); margin-bottom:7px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:12px 14px;
+    border-radius:5px;
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(47,111,237,0.18);
+  }
+  .field textarea{resize:vertical; min-height:80px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:480px){ .field-row{grid-template-columns:1fr;} }
+
+  .submit-btn{
+    width:100%;
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:700; font-size:18px; letter-spacing:0.03em;
+    text-transform:uppercase;
+    background:var(--accent); color:#0B0D10;
+    border:none; padding:15px; border-radius:5px;
+    cursor:pointer; margin-top:6px;
+  }
+  .submit-btn:hover{background:var(--accent-2);}
+  .submit-btn:focus-visible{outline:3px solid var(--accent-2); outline-offset:3px;}
+  .submit-btn:disabled{opacity:0.6; cursor:default;}
+
+  .form-error{color:var(--accent-2); font-size:13px; margin-top:-10px; margin-bottom:16px; display:none;}
+  .form-error.show{display:block;}
+
+  .success-state{text-align:center; padding:20px 0;}
+  .success-state .check{
+    width:56px; height:56px; border-radius:50%;
+    background:var(--accent); color:#0B0D10;
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; margin:0 auto 20px;
+  }
+  .success-state h3{margin-bottom:10px;}
+  .success-state p{color:var(--muted); font-size:15px; margin-bottom:22px;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-top">
+      <div class="brand"><b>AUTO WISE BRASIL</b> · Agência de Marketing para Concessionárias</div>
+    </div>
+
+    <div class="hero-body">
+      <div class="hero-copy">
+        <div class="eyebrow">Vaga aberta · Remoto</div>
+        <h1 class="headline">SDR de <span class="hl">Prospecção</span> Automotiva</h1>
+        <p class="sub">Você vai ligar, mandar mensagem e agendar diagnósticos com donos de lojas de veículos em todo o Brasil. Se gosta de meta, ritmo e fechar agenda — essa vaga é sua.</p>
+        <button class="cta-btn" id="openModalBtn" type="button">
+          Quero me candidatar <span class="arrow">→</span>
+        </button>
+      </div>
+
+      <div class="gauge-wrap" aria-hidden="true">
+        <svg width="180" height="120" viewBox="0 0 180 120">
+          <path d="M20 100 A70 70 0 0 1 160 100" fill="none" stroke="#2A2F36" stroke-width="10" stroke-linecap="round"/>
+          <path d="M20 100 A70 70 0 0 1 130 34" fill="none" stroke="#2F6FED" stroke-width="10" stroke-linecap="round"/>
+          <line x1="90" y1="100" x2="130" y2="44" stroke="#6FD3FF" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="90" cy="100" r="6" fill="#6FD3FF"/>
+        </svg>
+        <div class="gauge-label"><b>Alto volume</b>Meta de contatos diários</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="road-divider"></div>
+
+  <section>
+    <h2 class="section-title"><span class="num">01 — A vaga</span>Sobre a posição</h2>
+    <p class="sub" style="margin-bottom:0;">Você será a porta de entrada dos futuros clientes da Auto Wise Brasil: prospecção ativa (ligação e WhatsApp) para lojas e concessionárias, qualificação de leads e agendamento de diagnósticos comerciais para o time de vendas.</p>
+  </section>
+
+  <div class="road-divider"></div>
+
+  <section class="grid-2">
+    <div>
+      <h2 class="section-title"><span class="num">02 — Rotina</span>Responsabilidades</h2>
+      <ul class="list">
+        <li>Prospecção ativa (cold call e cold WhatsApp) para lojas de veículos</li>
+        <li>Qualificar leads seguindo script e critérios da empresa</li>
+        <li>Agendar diagnósticos/reuniões para o time comercial</li>
+        <li>Atualizar CRM com o andamento de cada contato</li>
+        <li>Reportar métricas de conversão periodicamente</li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="section-title"><span class="num">03 — Perfil</span>Requisitos</h2>
+      <ul class="list">
+        <li>Boa comunicação verbal e escrita</li>
+        <li>Resiliência para lidar com alto volume e recusas</li>
+        <li>Organização e disciplina para seguir processo</li>
+        <li>Experiência com SDR, telemarketing ou vendas (desejável)</li>
+        <li>Interesse pelo setor automotivo é diferencial</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="road-divider"></div>
+
+  <section>
+    <h2 class="section-title"><span class="num">04 — Contrapartida</span>O que oferecemos</h2>
+    <div class="offer-card">
+      <ul class="list">
+        <li>Fixo + comissão por diagnóstico agendado</li>
+        <li>Treinamento completo do método comercial da empresa</li>
+        <li>Rotina 100% remota e flexível</li>
+        <li>Espaço para crescer dentro da estrutura comercial</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="closing">
+    <div class="road-divider"></div>
+    <h2 class="section-title">Bora prospectar?</h2>
+    <p class="sub">Preencha seus dados que a gente entra em contato pelo WhatsApp.</p>
+    <button class="cta-btn" id="openModalBtn2" type="button">
+      Quero me candidatar <span class="arrow">→</span>
+    </button>
+    <p class="small">AUTO WISE BRASIL · MÁQUINA DE VENDAS AUTOMOTIVA</p>
+  </footer>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Fechar">✕</button>
+
+    <div id="formState">
+      <h3 id="modalTitle">Candidatura — SDR</h3>
+      <p class="modal-sub">Leva menos de 2 minutos.</p>
+
+      <form id="applyForm" novalidate>
+        <div class="field">
+          <label for="nome">Nome completo</label>
+          <input type="text" id="nome" name="nome" required>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="whatsapp">WhatsApp</label>
+            <input type="tel" id="whatsapp" name="whatsapp" placeholder="(00) 00000-0000" required>
+          </div>
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="cidade">Cidade / Estado</label>
+          <input type="text" id="cidade" name="cidade" placeholder="Ex: Ribeirão Preto/SP">
+        </div>
+
+        <div class="field">
+          <label for="experiencia">Experiência com vendas ou prospecção</label>
+          <select id="experiencia" name="experiencia">
+            <option value="Nenhuma">Nenhuma ainda</option>
+            <option value="Menos de 1 ano">Menos de 1 ano</option>
+            <option value="1 a 3 anos">1 a 3 anos</option>
+            <option value="3+ anos">3+ anos</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="linkedin">LinkedIn (opcional)</label>
+          <input type="url" id="linkedin" name="linkedin" placeholder="linkedin.com/in/seu-perfil">
+        </div>
+
+        <div class="field">
+          <label for="mensagem">Conte rapidamente sua experiência (opcional)</label>
+          <textarea id="mensagem" name="mensagem"></textarea>
+        </div>
+
+        <div class="form-error" id="formError">Preencha nome, WhatsApp e e-mail para continuar.</div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Enviar candidatura</button>
+      </form>
+    </div>
+
+    <div id="successState" class="success-state" style="display:none;">
+      <div class="check">✓</div>
+      <h3>Candidatura recebida!</h3>
+      <p>Vamos abrir o WhatsApp com seus dados prontos — é só confirmar o envio por lá.</p>
+      <button class="submit-btn" id="closeSuccessBtn" type="button">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Configuração ──────────────────────────────────────────
+  // Troque pelo número que vai receber as candidaturas (com DDI+DDD, só números).
+  const WHATSAPP_NUMBER = "5511999999999"; // TODO Lucas: colocar o número real aqui
+
+  // Opcional: cole aqui uma Webhook URL do n8n para receber os leads automaticamente
+  // no CRM/Kanban. Deixe em branco ("") se não quiser usar por enquanto.
+  const N8N_WEBHOOK_URL = "https://n8n.autowisebrasil.com.br/webhook-test/vagasdr";
+  // ──────────────────────────────────────────────────────────
+
+  const overlay = document.getElementById('modalOverlay');
+  const openBtns = [document.getElementById('openModalBtn'), document.getElementById('openModalBtn2')];
+  const closeBtn = document.getElementById('modalClose');
+  const form = document.getElementById('applyForm');
+  const formError = document.getElementById('formError');
+  const formState = document.getElementById('formState');
+  const successState = document.getElementById('successState');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function openModal(){
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    formState.style.display = 'block';
+    successState.style.display = 'none';
+    form.reset();
+    formError.classList.remove('show');
+    setTimeout(() => document.getElementById('nome').focus(), 50);
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  openBtns.forEach(btn => btn.addEventListener('click', openModal));
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+  document.getElementById('closeSuccessBtn').addEventListener('click', closeModal);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    if(!data.nome || !data.whatsapp || !data.email){
+      formError.classList.add('show');
+      return;
+    }
+    formError.classList.remove('show');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    // Envia para o n8n, se configurado (não bloqueia o fluxo se falhar)
+    if(N8N_WEBHOOK_URL){
+      try{
+        await fetch(N8N_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ ...data, origem: 'Vaga SDR - LinkedIn', data_envio: new Date().toISOString() })
+        });
+      }catch(err){ /* segue o fluxo mesmo se o webhook falhar */ }
+    }
+
+    // Mostra tela de sucesso e abre o WhatsApp com os dados prontos
+    formState.style.display = 'none';
+    successState.style.display = 'block';
+
+    const msg = `Olá! Quero me candidatar à vaga de SDR.%0A%0A` +
+      `Nome: ${encodeURIComponent(data.nome)}%0A` +
+      `WhatsApp: ${encodeURIComponent(data.whatsapp)}%0A` +
+      `E-mail: ${encodeURIComponent(data.email)}%0A` +
+      `Cidade/Estado: ${encodeURIComponent(data.cidade || '-')}%0A` +
+      `Experiência: ${encodeURIComponent(data.experiencia)}%0A` +
+      `LinkedIn: ${encodeURIComponent(data.linkedin || '-')}%0A` +
+      `Sobre: ${encodeURIComponent(data.mensagem || '-')}`;
+
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Enviar candidatura';
+  });
+</script>
+
+</body>
+</html>
